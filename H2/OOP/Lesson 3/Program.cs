@@ -4,7 +4,7 @@ using System;
 
 class Program
 {
-    static void Main()
+    private static void Main()
     {
         Library library = new Library();
 
@@ -30,16 +30,14 @@ class Program
                 if (!int.TryParse(input, out int choice))
                 {
                     throw new FormatException(
-                        "Du skal indtaste et tal mellem 1 og 5."
-                    );
+                        "Du skal indtaste et tal mellem 1 og 5.");
                 }
 
                 if (choice < 1 || choice > 5)
                 {
                     throw new ArgumentOutOfRangeException(
                         "choice",
-                        "Du skal vælge et tal mellem 1 og 5."
-                    );
+                        "Du skal vælge et tal mellem 1 og 5.");
                 }
 
                 switch (choice)
@@ -49,12 +47,15 @@ class Program
                         break;
 
                     case 2:
-                        Console.Write("Indtast titel eller del af titel: ");
+                        Console.Write(
+                            "Indtast titel eller del af titel: ");
+
                         string? searchText = Console.ReadLine();
 
                         if (string.IsNullOrWhiteSpace(searchText))
                         {
-                            Console.WriteLine("Du skal indtaste noget at søge efter.");
+                            Console.WriteLine(
+                                "Du skal indtaste noget at søge efter.");
                             break;
                         }
 
@@ -62,12 +63,15 @@ class Program
                         break;
 
                     case 3:
-                        Console.Write("Indtast ISBN på den bog, du vil låne: ");
+                        Console.Write(
+                            "Indtast ISBN på den bog, du vil låne: ");
+
                         string? borrowISBN = Console.ReadLine();
 
                         if (string.IsNullOrWhiteSpace(borrowISBN))
                         {
-                            Console.WriteLine("ISBN må ikke være tomt.");
+                            Console.WriteLine(
+                                "ISBN må ikke være tomt.");
                             break;
                         }
 
@@ -77,22 +81,27 @@ class Program
                         }
                         catch (ArgumentException ex)
                         {
-                            Console.WriteLine($"Fejl: {ex.Message}");
+                            Console.WriteLine(
+                                $"Fejl: {ex.Message}");
                         }
                         catch (InvalidOperationException ex)
                         {
-                            Console.WriteLine($"Fejl: {ex.Message}");
+                            Console.WriteLine(
+                                $"Fejl: {ex.Message}");
                         }
 
                         break;
 
                     case 4:
-                        Console.Write("Indtast ISBN på den bog, du vil aflevere: ");
+                        Console.Write(
+                            "Indtast ISBN på den bog, du vil aflevere: ");
+
                         string? returnISBN = Console.ReadLine();
 
                         if (string.IsNullOrWhiteSpace(returnISBN))
                         {
-                            Console.WriteLine("ISBN må ikke være tomt.");
+                            Console.WriteLine(
+                                "ISBN må ikke være tomt.");
                             break;
                         }
 
@@ -102,18 +111,21 @@ class Program
                         }
                         catch (ArgumentException ex)
                         {
-                            Console.WriteLine($"Fejl: {ex.Message}");
+                            Console.WriteLine(
+                                $"Fejl: {ex.Message}");
                         }
                         catch (InvalidOperationException ex)
                         {
-                            Console.WriteLine($"Fejl: {ex.Message}");
+                            Console.WriteLine(
+                                $"Fejl: {ex.Message}");
                         }
 
                         break;
 
                     case 5:
                         running = false;
-                        Console.WriteLine("Programmet afsluttes. Farvel!");
+                        Console.WriteLine(
+                            "Programmet afsluttes. Farvel!");
                         break;
                 }
             }
@@ -129,7 +141,9 @@ class Program
             {
                 if (running)
                 {
-                    Console.WriteLine("\nTryk Enter for at fortsætte...");
+                    Console.WriteLine(
+                        "\nTryk Enter for at fortsætte...");
+
                     Console.ReadLine();
                 }
             }
