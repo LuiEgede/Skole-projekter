@@ -46,6 +46,7 @@ public class Library
 
         foreach (Book book in books)
         {
+            // true/false om den er udlånt
             string status = book.IsBorrowed ? "Udlånt" : "Ledig";
 
             Console.WriteLine(

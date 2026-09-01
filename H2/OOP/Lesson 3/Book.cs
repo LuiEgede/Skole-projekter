@@ -2,6 +2,7 @@ namespace Lesson03Examples;
 
 public class Book
 {
+    // Properties med private set, kan læses udefra, men ikke set'es udefra klassen
     public string Title { get; private set; }
     public string Author { get; private set; }
     public string ISBN { get; private set; }
@@ -25,7 +26,7 @@ public class Book
 
         IsBorrowed = true;
     }
-
+    
     public void Return()
     {
         if (!IsBorrowed)
