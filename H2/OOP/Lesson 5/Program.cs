@@ -41,10 +41,6 @@ namespace Lesson04
                 vehicle.Start();
 
                 // CalculateAnnualTax() er abstrakt i Vehicle.
-                //
-                // Derfor kaldes den rigtige override-metode:
-                // Car → 2400 kr.
-                // Motorcycle → 1000 kr.
                 decimal tax = vehicle.CalculateAnnualTax();
 
                 Console.WriteLine(vehicle.Description());
@@ -67,8 +63,6 @@ namespace Lesson04
             Console.WriteLine("=== Polymorfi via IUdlejelig ===");
 
             // Listen bruger INTERFACET som type.
-            // Både Car og Motorcycle kan være i listen,
-            // fordi de begge implementerer IUdlejelig.
             List<IUdlejelig> rentableVehicles =
                 new List<IUdlejelig>
                 {
