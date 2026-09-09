@@ -1,6 +1,12 @@
 namespace Heltevagten.Exceptions;
 
-public class HeroUnavailableException
+public class HeroUnavailableException : Exception
 {
-    
+    public HeroUnavailableException()
+    {
+    }
+
+    public HeroUnavailableException(string message) : base(message)
+    {
+    }
 }
