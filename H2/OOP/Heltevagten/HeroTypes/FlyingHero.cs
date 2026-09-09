@@ -1,4 +1,5 @@
 using Heltevagten.Interfaces;
+using Heltevagten.Models;
 
 namespace Heltevagten.HeroTypes;
 

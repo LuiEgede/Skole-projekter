@@ -1,4 +1,4 @@
-namespace Heltevagten;
+namespace Heltevagten.Models;
 
 public abstract class Hero
 {
@@ -20,6 +20,16 @@ public abstract class Hero
     }
 
     public bool IsAvailable { get; private set; }
+
+    public void MarkAsUnavailable()
+    {
+        IsAvailable = false;
+    }
+
+    public void MarkAsAvailable()
+    {
+        IsAvailable = true;
+    }
 
     public void UseEnergy(int amount)
     {

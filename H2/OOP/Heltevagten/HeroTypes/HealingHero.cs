@@ -1,3 +1,5 @@
+using Heltevagten.Models;
+
 namespace Heltevagten.HeroTypes;
 
 public class HealingHero : Hero
