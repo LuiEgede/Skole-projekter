@@ -1,4 +1,4 @@
-namespace Heltevagten.Interfaces;
+namespace Heltevagten.interfaces;
 
 public interface ISuperStrong
 {

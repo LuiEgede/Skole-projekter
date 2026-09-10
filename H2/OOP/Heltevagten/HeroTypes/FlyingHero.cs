@@ -1,4 +1,4 @@
-using Heltevagten.Interfaces;
+using Heltevagten.interfaces;
 using Heltevagten.Models;
 
 namespace Heltevagten.HeroTypes;

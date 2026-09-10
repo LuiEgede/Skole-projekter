@@ -1,6 +1,7 @@
 using Heltevagten.Exceptions;
 using Heltevagten.interfaces;
 using Heltevagten.Models;
+using Heltevagten.Helpers;
 
 namespace Heltevagten.Services;
 
@@ -23,11 +24,21 @@ public class DispatchCenter
 
     public void RegisterHero(Hero hero)
     {
+        if (hero == null)
+        {
+            throw new ArgumentNullException(nameof(hero));
+        }
+
         _heroes.Add(hero);
     }
 
     public void ReportIncident(Incident incident)
     {
+        if (incident == null)
+        {
+            throw new ArgumentNullException(nameof(incident));
+        }
+
         _incidents.Add(incident);
     }
 
@@ -62,8 +73,36 @@ public class DispatchCenter
             throw new HeroUnavailableException($"{selectedHero.Name} is currently unavailable.");
         }
 
+        var energyCost = EnergyHelper.GetEnergyCost(incident.Severity);
+        selectedHero.UseEnergy(energyCost);
         selectedHero.MarkAsUnavailable();
 
         return $"{selectedHero.Name} has been assigned to incident at {incident.Location}.";
+    }
+
+    public void ResolveIncident(Incident incident, Hero hero, Action<Incident, Hero> onResolved)
+    {
+        if (incident == null)
+        {
+            throw new ArgumentNullException(nameof(incident));
+        }
+
+        if (hero == null)
+        {
+            throw new ArgumentNullException(nameof(hero));
+        }
+
+        if (onResolved == null)
+        {
+            throw new ArgumentNullException(nameof(onResolved));
+        }
+
+        if (incident.IsResolved)
+        {
+            return;
+        }
+
+        incident.MarkAsResolved();
+        onResolved(incident, hero);
     }
 }
