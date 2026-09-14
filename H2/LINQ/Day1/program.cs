@@ -1,16 +1,5 @@
-﻿class Product
-{
-    public string Name { get; set; }
-    public string Department { get; set; }
-    public decimal Price { get; set; }
+﻿public record Product (string Name, string Department, decimal Price);
 
-    public Product(string name, string department, decimal price)
-    {
-        Name = name;
-        Department = department;
-        Price = price;
-    }
-}
 
 // Return an object of your choice for items over 5000
 static class ProductExtensions
@@ -113,7 +102,7 @@ class Program
 
 
 
-        
+
 
 
 
