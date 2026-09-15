@@ -1,4 +1,6 @@
-﻿public record Product (string Name, string Department, decimal Price);
+﻿using System.Linq.Expressions;
+// records compares with valuetype instead of reference type, which make good sensse working with LINQ
+public record Product (string Name, string Department, decimal Price);
 
 
 // Return an object of your choice for items over 5000
@@ -102,7 +104,17 @@ class Program
 
 
 
+        // sorted products by asc price using query expressions
+        var sortedProducts =
+            from product in products
+            orderby product.Price
+            select product;
 
+        // Expression tree stores the lambda as data, and Compile() turns it into a function that can be executed.
+        Expression<Func<Product, bool>> isExpensiveExpression = product => product.Price > 5000m;
+        var compiledExpression = isExpensiveExpression.Compile();
+        bool result = compiledExpression(products[0]);
+        Console.WriteLine(result);
 
 
 
