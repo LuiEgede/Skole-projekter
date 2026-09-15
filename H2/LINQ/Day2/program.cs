@@ -194,5 +194,43 @@ class Program
             .OrderByDescending(product => product.Price)
             .Skip(6)
             .Take(3);
+        
+        // Task 9 A Find all tags from product Select returns me the list, SelectMany returns me the tags in the list
+        var allTags = products.SelectMany(product => product.Tags);
+
+        foreach (var tag in allTags)
+        {
+            Console.WriteLine(tag);
+        }
+
+        // Task 9 B Finds the unique tags
+        var uniqueTags = products
+            .SelectMany(product => product.Tags)
+            .Distinct();
+
+        foreach (var tag in uniqueTags)
+        {
+            Console.WriteLine(tag);
+        }
+
+        // Task 9 C Find all products that contains the tag "Gaming"
+        var gamingProductsWithTags = products.Where(product => product.Tags.Contains("Gaming"));
+
+        foreach (var product in gamingProductsWithTags)
+        {
+            Console.WriteLine($"{product.Name} - {product.Category} - {product.Price} kr.");
+        }
+
+        // Task 9 D Count the number of unique tags
+        var tagCount = products
+            .SelectMany(product => product.Tags)
+            .Distinct()
+            .Count();
+
+        Console.WriteLine($"Number of different tags: {tagCount}");
+
+        // Task 10
+        var productsFromAnalysis = ProductData.GetProducts();
+        ProductAnalysis.GenerateReport(productsFromAnalysis);
     }
 }
