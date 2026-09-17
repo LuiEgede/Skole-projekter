@@ -1,13 +1,14 @@
 ﻿namespace Day2;
 
 using System;
-using System.Collections.Generic;
+
 
 
 class Program
 {
     static void Main()
     {
+        // Labda for each product => expression/check
         // Task 1:
         var products = ProductData.GetProducts();
 
@@ -18,7 +19,9 @@ class Program
         var gamingProducts = products.Where(product => product.Name.Contains("Gaming"));
 
 
-        // Task 2 A:
+        // Task 2 A: Select() transforms each element into a new value
+        // IEnumerable = a sequence that can be iterated over using an enumerator
+        // Enumerator = an object that allows you to iterate over a collection(product.Name)
         var productNames = products.Select(product => product.Name);
 
         foreach (var name in productNames)
