@@ -5,6 +5,8 @@ namespace Day1.Data;
 
 public class AppDbContext : DbContext
 {
+    private readonly string _dbPath = Path.Combine(AppContext.BaseDirectory, "workshop.db");
+
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Car> Cars => Set<Car>();
     public DbSet<WorkOrder> WorkOrders => Set<WorkOrder>();
@@ -15,7 +17,7 @@ public class AppDbContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlite("Data Source=workshop.db");
+            optionsBuilder.UseSqlite($"Data Source={_dbPath}");
         }
     }
 
