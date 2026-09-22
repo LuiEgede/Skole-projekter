@@ -1,6 +1,7 @@
-﻿using Day1;
+﻿using Day1.Data;
+using Day1.Services;
 
-if (!File.Exists("workshop.db"))
-{
-    DatabaseInitializer.CreateDatabase();
-}
+using var context = new AppDbContext();
+
+context.Database.EnsureCreated();
+DbSeeder.Seed(context);
