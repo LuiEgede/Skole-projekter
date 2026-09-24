@@ -1,0 +1,44 @@
+CREATE DATABASE IF NOT EXISTS day1;
+USE day1;
+
+CREATE TABLE IF NOT EXISTS Customers (
+    CustomerId INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerName VARCHAR(100) NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
+    Email VARCHAR(255) UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS Cars (
+    CarId INT PRIMARY KEY AUTO_INCREMENT,
+    CustomerId INT NOT NULL,
+    LicensePlate VARCHAR(20) NOT NULL UNIQUE,
+    Brand VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    ManufactureYear INT NOT NULL,
+    FOREIGN KEY (CustomerId) REFERENCES Customers(CustomerId)
+);
+
+CREATE TABLE IF NOT EXISTS WorkOrders (
+    WorkOrderId INT PRIMARY KEY AUTO_INCREMENT,
+    CarId INT NOT NULL,
+    StartDate DATETIME NOT NULL,
+    EndDate DATETIME NULL,
+    WorkDescription TEXT NOT NULL,
+    WorkStatus VARCHAR(50) NOT NULL,
+    FOREIGN KEY (CarId) REFERENCES Cars(CarId)
+);
+
+CREATE TABLE IF NOT EXISTS Parts (
+    PartId INT PRIMARY KEY AUTO_INCREMENT,
+    PartName VARCHAR(100) NOT NULL,
+    Price DECIMAL(10,2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS WorkOrderParts (
+    WorkOrderId INT NOT NULL,
+    PartId INT NOT NULL,
+    Quantity INT NOT NULL,
+    PRIMARY KEY (WorkOrderId, PartId),
+    FOREIGN KEY (WorkOrderId) REFERENCES WorkOrders(WorkOrderId),
+    FOREIGN KEY (PartId) REFERENCES Parts(PartId)
+);

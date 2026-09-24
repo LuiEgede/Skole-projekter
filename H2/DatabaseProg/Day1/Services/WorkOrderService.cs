@@ -1,15 +1,19 @@
-using Day1.Data;
+using Day1.Interfaces;
 using Day1.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Day1.Services;
 
 public class WorkOrderService
 {
+    private readonly IRepository<WorkOrder> _repository;
+
+    public WorkOrderService(IRepository<WorkOrder> repository)
+    {
+        _repository = repository;
+    }
+
     public void CreateWorkOrder(int carId, string workDescription, string workStatus, string user)
     {
-        using var context = new AppDbContext();
-
         var workOrder = new WorkOrder
         {
             CarId = carId,
@@ -19,8 +23,7 @@ public class WorkOrderService
             WorkStatus = workStatus
         };
 
-        context.WorkOrders.Add(workOrder);
-        context.SaveChanges();
+        _repository.Add(workOrder);
 
         LogService.Log(
             user: user,
@@ -28,14 +31,13 @@ public class WorkOrderService
             tableName: "WorkOrders",
             recordId: workOrder.WorkOrderId,
             oldData: null,
-            newData: $"Status={workOrder.WorkStatus}, Description={workOrder.WorkDescription}");
+            newData:
+            $"CarId={workOrder.CarId}, Status={workOrder.WorkStatus}, Description={workOrder.WorkDescription}");
     }
 
     public void UpdateWorkOrderStatus(int workOrderId, string newStatus, string user)
     {
-        using var context = new AppDbContext();
-
-        var workOrder = context.WorkOrders.FirstOrDefault(w => w.WorkOrderId == workOrderId);
+        var workOrder = _repository.GetById(workOrderId);
 
         if (workOrder == null)
             return;
@@ -43,7 +45,7 @@ public class WorkOrderService
         string oldStatus = workOrder.WorkStatus;
 
         workOrder.WorkStatus = newStatus;
-        context.SaveChanges();
+        _repository.Update(workOrder);
 
         LogService.Log(
             user: user,
@@ -54,19 +56,19 @@ public class WorkOrderService
             newData: $"Status={newStatus}");
     }
 
-    public void DeleteWorkOrder(int workOrderId, string user)
+    public void DeleteWorkOrder(int workOrderId, string user, bool isAdmin)
     {
-        using var context = new AppDbContext();
+        if (!isAdmin)
+            return;
 
-        var workOrder = context.WorkOrders.FirstOrDefault(w => w.WorkOrderId == workOrderId);
+        var workOrder = _repository.GetById(workOrderId);
 
         if (workOrder == null)
             return;
 
         string oldData = $"Status={workOrder.WorkStatus}, Description={workOrder.WorkDescription}";
 
-        context.WorkOrders.Remove(workOrder);
-        context.SaveChanges();
+        _repository.Delete(workOrderId);
 
         LogService.Log(
             user: user,
@@ -75,5 +77,10 @@ public class WorkOrderService
             recordId: workOrderId,
             oldData: oldData,
             newData: null);
+    }
+
+    public IEnumerable<WorkOrder> GetAllWorkOrders()
+    {
+        return _repository.GetAll();
     }
 }
