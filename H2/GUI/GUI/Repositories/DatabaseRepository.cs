@@ -1,6 +1,6 @@
-using Dapper;
 using GUI.Data;
 using GUI.Models;
+using MySqlConnector;
 
 namespace GUI.Repositories;
 
@@ -11,15 +11,29 @@ public class DatabaseRepository
         try
         {
             using var connection = MySqlConnectionFactory.CreateConnection();
+            connection.Open();
 
-            string sql = """
+            const string sql = """
                 SELECT TABLE_NAME AS TableName
                 FROM INFORMATION_SCHEMA.TABLES
                 WHERE TABLE_SCHEMA = 'day1'
                 ORDER BY TABLE_NAME;
                 """;
 
-            return connection.Query<TableInfo>(sql);
+            var tables = new List<TableInfo>();
+
+            using var command = new MySqlCommand(sql, connection);
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                tables.Add(new TableInfo
+                {
+                    TableName = reader.GetString("TableName")
+                });
+            }
+
+            return tables;
         }
         catch (Exception ex)
         {
@@ -33,30 +47,34 @@ public class DatabaseRepository
         try
         {
             using var connection = MySqlConnectionFactory.CreateConnection();
+            connection.Open();
 
-            string sql = $"SELECT * FROM `{tableName}`;";
-            var rows = connection.Query(sql);
+            string sql = $"SELECT * FROM day1.`{tableName}`;";
 
-            var result = new List<TableRow>();
+            var rows = new List<TableRow>();
 
-            foreach (var row in rows)
+            using var command = new MySqlCommand(sql, connection);
+            using var reader = command.ExecuteReader();
+
+            while (reader.Read())
             {
-                var dict = (IDictionary<string, object>)row;
-                var tableRow = new TableRow();
+                var row = new TableRow();
 
-                foreach (var kvp in dict)
+                for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    tableRow.Values[kvp.Key] = kvp.Value;
+                    var columnName = reader.GetName(i);
+                    var value = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    row.Values[columnName] = value;
                 }
 
-                result.Add(tableRow);
+                rows.Add(row);
             }
 
-            return result;
+            return rows;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error while fetching table data: {ex.Message}");
+            Console.WriteLine($"Error while fetching data from {tableName}: {ex.Message}");
             return Enumerable.Empty<TableRow>();
         }
     }

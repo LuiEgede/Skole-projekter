@@ -1,28 +1,41 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 @using GUI.Models
 @using GUI.Repositories
 @inject DatabaseRepository DatabaseRepository
 
 <PageTitle>Home</PageTitle>
 
-<h1>Database overview</h1>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding:0.75rem; border:1px solid #ccc; border-radius:6px;">
+    <div>
+        <strong>@TitleText</strong>
+    </div>
+
+    <div>
+        <label for="languageSelect">Language:</label>
+        <select id="languageSelect" @onchange="OnLanguageChanged">
+            <option value="da" selected="@(selectedLanguage == "da")">Dansk</option>
+            <option value="en" selected="@(selectedLanguage == "en")">English</option>
+        </select>
+    </div>
+</div>
 
 @if (tables == null)
 {
-    <p>Loading tables...</p>
+    <p>@LoadingText</p>
 }
 else if (!tables.Any())
 {
-    <p>No tables found.</p>
+    <p>@NoTablesText</p>
 }
 else
 {
-    <label for="tableSelect">Select a table:</label>
+    <label for="tableSelect">@SelectTableText</label>
     <select id="tableSelect" @onchange="OnTableChanged">
-        <option value="">-- choose a table --</option>
+        <option value="">-- @ChooseTableText --</option>
         @foreach (var table in tables)
         {
-            <option value="@table.TableName">@table.TableName</option>
+            <option value="@table.TableName" selected="@(table.TableName == selectedTable)">@table.TableName</option>
         }
     </select>
 
@@ -33,20 +46,20 @@ else
 
             @if (tableData == null)
             {
-                <p>Loading table data...</p>
+                <p>@LoadingTableDataText</p>
             }
             else if (!tableData.Any())
             {
-                <p>No rows found.</p>
+                <p>@NoRowsFoundText</p>
             }
             else
             {
-                <table>
+                <table style="border-collapse: collapse; width: 100%;">
                     <thead>
                         <tr>
                             @foreach (var column in tableData.First().Values.Keys)
                             {
-                                <th>@column</th>
+                                <th style="border: 1px solid #ccc; padding: 6px;">@column</th>
                             }
                         </tr>
                     </thead>
@@ -56,7 +69,7 @@ else
                             <tr>
                                 @foreach (var cell in row.Values.Values)
                                 {
-                                    <td>@cell</td>
+                                    <td style="border: 1px solid #ccc; padding: 6px;">@cell</td>
                                 }
                             </tr>
                         }
@@ -71,12 +84,14 @@ else
     private IEnumerable<TableInfo>? tables;
     private IEnumerable<TableRow>? tableData;
     private string selectedTable = string.Empty;
+    private string selectedLanguage = "da";
 
     protected override void OnInitialized()
     {
         tables = DatabaseRepository.GetTables();
     }
 
+    // Update the selected table and refresh only the table section of the page.
     private void OnTableChanged(ChangeEventArgs e)
     {
         selectedTable = e.Value?.ToString() ?? string.Empty;
@@ -84,4 +99,37 @@ else
             ? Enumerable.Empty<TableRow>()
             : DatabaseRepository.GetTableData(selectedTable);
     }
+
+    private void OnLanguageChanged(ChangeEventArgs e)
+    {
+        selectedLanguage = e.Value?.ToString() ?? "da";
+    }
+
+    private string TitleText => selectedLanguage == "da"
+        ? "Databaseoversigt"
+        : "Database overview";
+
+    private string SelectTableText => selectedLanguage == "da"
+        ? "Vælg en tabel:"
+        : "Select a table:";
+
+    private string ChooseTableText => selectedLanguage == "da"
+        ? "vælg en tabel"
+        : "choose a table";
+
+    private string LoadingText => selectedLanguage == "da"
+        ? "Indlæser tabeller..."
+        : "Loading tables...";
+
+    private string NoTablesText => selectedLanguage == "da"
+        ? "Ingen tabeller fundet."
+        : "No tables found.";
+
+    private string LoadingTableDataText => selectedLanguage == "da"
+        ? "Indlæser tabeldata..."
+        : "Loading table data...";
+
+    private string NoRowsFoundText => selectedLanguage == "da"
+        ? "Ingen rækker fundet."
+        : "No rows found.";
 }
