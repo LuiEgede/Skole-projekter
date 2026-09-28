@@ -1,0 +1,87 @@
+﻿@page "/"
+@using GUI.Models
+@using GUI.Repositories
+@inject DatabaseRepository DatabaseRepository
+
+<PageTitle>Home</PageTitle>
+
+<h1>Database overview</h1>
+
+@if (tables == null)
+{
+    <p>Loading tables...</p>
+}
+else if (!tables.Any())
+{
+    <p>No tables found.</p>
+}
+else
+{
+    <label for="tableSelect">Select a table:</label>
+    <select id="tableSelect" @onchange="OnTableChanged">
+        <option value="">-- choose a table --</option>
+        @foreach (var table in tables)
+        {
+            <option value="@table.TableName">@table.TableName</option>
+        }
+    </select>
+
+    @if (!string.IsNullOrWhiteSpace(selectedTable))
+    {
+        <div style="margin-top: 1rem; padding: 1rem; border: 1px solid #ccc;">
+            <h3>@selectedTable</h3>
+
+            @if (tableData == null)
+            {
+                <p>Loading table data...</p>
+            }
+            else if (!tableData.Any())
+            {
+                <p>No rows found.</p>
+            }
+            else
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            @foreach (var column in tableData.First().Values.Keys)
+                            {
+                                <th>@column</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in tableData)
+                        {
+                            <tr>
+                                @foreach (var cell in row.Values.Values)
+                                {
+                                    <td>@cell</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    }
+}
+
+@code {
+    private IEnumerable<TableInfo>? tables;
+    private IEnumerable<TableRow>? tableData;
+    private string selectedTable = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        tables = DatabaseRepository.GetTables();
+    }
+
+    private void OnTableChanged(ChangeEventArgs e)
+    {
+        selectedTable = e.Value?.ToString() ?? string.Empty;
+        tableData = string.IsNullOrWhiteSpace(selectedTable)
+            ? Enumerable.Empty<TableRow>()
+            : DatabaseRepository.GetTableData(selectedTable);
+    }
+}
