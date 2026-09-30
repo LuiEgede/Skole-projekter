@@ -343,4 +343,46 @@ public class DatabaseRepository
             Console.WriteLine($"Error while deleting from {tableName}: {ex.Message}");
         }
     }
+
+    public int GetTableCount()
+{
+    try
+    {
+        using var connection = MySqlConnectionFactory.CreateConnection();
+        connection.Open();
+
+        const string sql = """
+            SELECT COUNT(*)
+            FROM INFORMATION_SCHEMA.TABLES
+            WHERE TABLE_SCHEMA = 'day1';
+            """;
+
+        using var command = new MySqlCommand(sql, connection);
+        return Convert.ToInt32(command.ExecuteScalar());
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error while counting tables: {ex.Message}");
+        return 0;
+    }
+}
+
+public int GetRowCount(string tableName)
+{
+    try
+    {
+        using var connection = MySqlConnectionFactory.CreateConnection();
+        connection.Open();
+
+        string sql = $"SELECT COUNT(*) FROM day1.`{tableName}`;";
+
+        using var command = new MySqlCommand(sql, connection);
+        return Convert.ToInt32(command.ExecuteScalar());
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error while counting rows in {tableName}: {ex.Message}");
+        return 0;
+    }
+}
 }

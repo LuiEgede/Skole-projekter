@@ -1,0 +1,48 @@
+@using GUI.Repositories
+@inject DatabaseRepository DatabaseRepository
+
+<div class="stats-box">
+    <h4>Database status</h4>
+
+    @if (tableCount == 0 && rowCounts.Count == 0)
+    {
+        <p>Loading database stats...</p>
+    }
+    else
+    {
+        <p><strong>Tables:</strong> @tableCount</p>
+
+        <ul>
+            @foreach (var item in rowCounts)
+            {
+                <li>@item.Key: @item.Value rows</li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    private int tableCount;
+    private Dictionary<string, int> rowCounts = new();
+
+    protected override void OnInitialized()
+    {
+        LoadStats();
+    }
+
+    public void Refresh()
+    {
+        LoadStats();
+        StateHasChanged();
+    }
+
+    private void LoadStats()
+    {
+        var tables = DatabaseRepository.GetTables();
+        tableCount = tables.Count();
+
+        rowCounts = tables.ToDictionary(
+            table => table.TableName,
+            table => DatabaseRepository.GetRowCount(table.TableName));
+    }
+}

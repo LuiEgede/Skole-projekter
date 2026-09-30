@@ -123,3 +123,11 @@ h1:focus {
     padding: 0.5rem;
     text-align: left;
 }
+
+.stats-box {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f5f5f5;
+    margin-bottom: 1rem;
+}

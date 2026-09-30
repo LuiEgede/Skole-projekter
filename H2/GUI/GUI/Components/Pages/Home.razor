@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using GUI.Models
 @using GUI.Repositories
+@using GUI.Components
 @inject DatabaseRepository DatabaseRepository
 
 <PageTitle>Home</PageTitle>
@@ -44,7 +45,11 @@
             </select>
         </div>
 
-        @if (!string.IsNullOrWhiteSpace(selectedTable))
+        @if (string.IsNullOrWhiteSpace(selectedTable))
+        {
+            <DatabaseStats @ref="databaseStats" />
+        }
+        else
         {
             <div class="data-section">
                 <h3>@selectedTable</h3>
@@ -187,6 +192,8 @@
     private Dictionary<string, string> newValues = new();
     private Dictionary<string, string> editValues = new();
 
+    private DatabaseStats? databaseStats;
+
     protected override void OnInitialized()
     {
         tables = DatabaseRepository.GetTables();
@@ -202,6 +209,8 @@
         selectedRow = null;
         newValues = CreateValueDictionary(selectedTable);
         editValues = CreateValueDictionary(selectedTable);
+
+        databaseStats?.Refresh();
     }
 
     private void OnLanguageChanged(ChangeEventArgs e)
@@ -230,6 +239,7 @@
 
         tableData = DatabaseRepository.GetTableData(selectedTable);
         newValues = CreateValueDictionary(selectedTable);
+        databaseStats?.Refresh();
     }
 
     private void UpdateRow()
@@ -252,6 +262,7 @@
 
         DatabaseRepository.UpdateRow(selectedTable, row);
         tableData = DatabaseRepository.GetTableData(selectedTable);
+        databaseStats?.Refresh();
     }
 
     private void DeleteRow()
@@ -271,6 +282,7 @@
         tableData = DatabaseRepository.GetTableData(selectedTable);
         selectedRow = null;
         editValues = CreateValueDictionary(selectedTable);
+        databaseStats?.Refresh();
     }
 
     private TableRow BuildRowFromValues(Dictionary<string, string> values)
