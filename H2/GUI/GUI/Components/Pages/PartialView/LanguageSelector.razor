@@ -1,0 +1,18 @@
+<div class="language-selector">
+    <label for="languageSelect">Language:</label>
+    <select id="languageSelect" @onchange="HandleLanguageChange">
+        <option value="da" selected="@(SelectedLanguage == "da")">Dansk</option>
+        <option value="en" selected="@(SelectedLanguage == "en")">English</option>
+    </select>
+</div>
+
+@code {
+    [Parameter] public string SelectedLanguage { get; set; } = "da";
+    [Parameter] public EventCallback<string> SelectedLanguageChanged { get; set; }
+
+    private async Task HandleLanguageChange(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString() ?? "da";
+        await SelectedLanguageChanged.InvokeAsync(value);
+    }
+}

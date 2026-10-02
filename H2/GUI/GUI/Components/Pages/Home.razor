@@ -2,7 +2,8 @@
 @rendermode InteractiveServer
 @using GUI.Models
 @using GUI.Repositories
-@using GUI.Components
+@using GUI.Components.Pages.CustomControls
+@using GUI.Components.Pages.PartialView
 @inject DatabaseRepository DatabaseRepository
 
 <PageTitle>Home</PageTitle>
@@ -12,13 +13,7 @@
         <strong>@TitleText</strong>
     </div>
 
-    <div>
-        <label for="languageSelect">Language:</label>
-        <select id="languageSelect" @onchange="OnLanguageChanged">
-            <option value="da" selected="@(selectedLanguage == "da")">Dansk</option>
-            <option value="en" selected="@(selectedLanguage == "en")">English</option>
-        </select>
-    </div>
+    <LanguageSelector SelectedLanguage="@selectedLanguage" SelectedLanguageChanged="OnLanguageChanged" />
 </div>
 
 <div class="content-area">
@@ -213,9 +208,10 @@
         databaseStats?.Refresh();
     }
 
-    private void OnLanguageChanged(ChangeEventArgs e)
+    private async Task OnLanguageChanged(string language)
     {
-        selectedLanguage = e.Value?.ToString() ?? "da";
+        selectedLanguage = language;
+        await Task.CompletedTask;
     }
 
     private void SelectRow(TableRow row)
