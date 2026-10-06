@@ -38,7 +38,8 @@ public class FilesController : ControllerBase
 
     // Uploads a file to the server's upload folder.
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadFile(IFormFile file)
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UploadFile([FromForm] IFormFile file)
     {
         if (file == null || file.Length == 0)
         {
@@ -56,4 +57,42 @@ public class FilesController : ControllerBase
             FileName = file.FileName
         });
     }
+
+    // Downloads a file from the server's upload folder.
+    [HttpGet("download/{fileName}")]
+    public IActionResult DownloadFile(string fileName)
+    {
+        var safeFileName = Path.GetFileName(fileName);
+        var filePath = Path.Combine(_uploadFolderPath, safeFileName);
+
+        if (!System.IO.File.Exists(filePath))
+        {
+            return NotFound("File not found.");
+        }
+
+        var contentType = "application/octet-stream";
+        return PhysicalFile(filePath, contentType, safeFileName);
+    }
+
+    // Deletes a file from the server's upload folder.
+    [HttpDelete("{fileName}")]
+    public IActionResult DeleteFile(string fileName)
+    {
+        var safeFileName = Path.GetFileName(fileName);
+        var filePath = Path.Combine(_uploadFolderPath, safeFileName);
+
+        if (!System.IO.File.Exists(filePath))
+        {
+            return NotFound("File not found.");
+        }
+
+        System.IO.File.Delete(filePath);
+        return Ok(new
+        {
+            Message = "File deleted successfully.",
+            FileName = safeFileName
+        });
+    }
+
+
 }

@@ -1,0 +1,60 @@
+@page
+@model ClientSideServer.Pages.FilesModel
+@{
+    ViewData["Title"] = "File overview";
+}
+
+<link rel="stylesheet" href="~/files.css" />
+
+<div class="files-page">
+    <h1>File overview</h1>
+
+    @if (Model.Files.Count == 0)
+    {
+        <p>No files found.</p>
+    }
+    else
+    {
+        <table class="files-table">
+            <thead>
+                <tr>
+                    <th>File name</th>
+                    <th>Size</th>
+                    <th>Last modified</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model.Files)
+                {
+                    <tr id="row-@file.FileName">
+                        <td>@file.FileName</td>
+                        <td>@file.SizeInBytes</td>
+                        <td>@file.LastModified</td>
+                        <td class="file-actions">
+                            <a class="action-link" href="/api/files/download/@Uri.EscapeDataString(file.FileName)">Download</a>
+                            <button type="button" class="delete-button" onclick="deleteFile('@Uri.EscapeDataString(file.FileName)', 'row-@file.FileName')">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<script>
+    async function deleteFile(fileName, rowId) {
+        const response = await fetch(`/api/files/${fileName}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            const row = document.getElementById(rowId);
+            if (row) {
+                row.remove();
+            }
+        } else {
+            alert('Delete failed');
+        }
+    }
+</script>

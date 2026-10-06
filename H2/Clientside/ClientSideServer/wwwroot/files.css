@@ -1,0 +1,52 @@
+.files-page {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1rem;
+    font-family: Arial, sans-serif;
+}
+
+.files-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: #fff;
+}
+
+.files-table th,
+.files-table td {
+    border: 1px solid #ccc;
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.files-table th {
+    background: #f3f3f3;
+}
+
+.file-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.action-link,
+.delete-button {
+    display: inline-block;
+    padding: 0.4rem 0.75rem;
+    text-decoration: none;
+    border: 1px solid #888;
+    border-radius: 4px;
+    background: #fafafa;
+    color: #000;
+    cursor: pointer;
+    font: inherit;
+}
+
+.delete-button {
+    background: #ffe8e8;
+    border-color: #cc6666;
+}
+
+.delete-form {
+    margin: 0;
+}
