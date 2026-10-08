@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ClientSide Client</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <main class="page">
+        <header class="page-header">
+            <h1>File Upload / Download Client</h1>
+            <p>Upload files to the server and download files from the server.</p>
+        </header>
+
+        <section class="panel upload-panel">
+            <h2>Upload file</h2>
+            <input type="file" id="fileInput" />
+            <button id="uploadBtn">Upload</button>
+            <p id="uploadStatus" class="status"></p>
+        </section>
+
+        <section class="panel files-panel">
+            <h2>Server files</h2>
+            <p id="loadStatus" class="status"></p>
+            <ul id="fileList" class="file-list"></ul>
+        </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
